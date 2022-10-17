@@ -27,9 +27,7 @@ struct ContentView: View {
 	}
 	private func initializePodometer() {
 		if isPedometerAvailable {
-			guard let startDate = Calendar.current.date(byAdding: .minute, value: -60, to: Date()) else { return }
-			
-			pedometer.queryPedometerData(from: startDate, to: Date()) {  (data, error) in
+			pedometer.startUpdates(from: Date()) { (data, error) in
 				guard let data = data, error == nil else { return }
 				updateUI(data: data)
 			}
@@ -42,10 +40,14 @@ struct ContentView: View {
 	var body: some View {
 		VStack {
 			if let steps {
-				Text(steps.description)
+				Text("\(steps.description) steps")
+			} else {
+				Text("0 steps !")
 			}
 			if let distance {
 				Text("\(String(format: "%.2f meters", distance))")
+			} else {
+				Text("0 meter!")
 			}
 		}
 		.onAppear {
